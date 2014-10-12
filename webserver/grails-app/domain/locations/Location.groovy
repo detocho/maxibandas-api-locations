@@ -11,6 +11,6 @@ class Location {
 
     String parentLocationId
     String name
-    String dateRegistration
+    String dateRegistration = new Date()
     String level
 }
