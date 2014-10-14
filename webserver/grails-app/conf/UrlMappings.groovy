@@ -4,7 +4,7 @@ class UrlMappings {
 
         "/$locationId?"{
             controller = "Location"
-            action = [GET:'getLocation',POST:'notAllowed', PUT:'notAllowed',DELETE:'notAllowed']
+            action = [GET:'getLocation',POST:'addLocation', PUT:'notAllowed',DELETE:'notAllowed']
         }
 	}
 }

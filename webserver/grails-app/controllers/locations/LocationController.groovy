@@ -49,6 +49,36 @@ class LocationController {
         }
     }
 
+    def addLocation(){
+
+        def result
+        def parentLocationId =params.locationId
+
+        setHeaders()
+
+        try{
+
+            if(!parentLocationId){
+                result = locationService.createLocation(request.JSON)
+            }else{
+                result = locationService.createLocation(parentLocationId, request.JSON)
+            }
+            response.setStatus(HttpServletResponse.SC_CREATED)
+            render result as GSON
+        }catch(NotFoundException e){
+
+            renderException(e)
+
+        }catch(BadRequestException e){
+
+            renderException(e)
+
+        }catch(Exception e){
+
+            renderException(e)
+        }
+    }
+
 
     def setHeaders(){
 
