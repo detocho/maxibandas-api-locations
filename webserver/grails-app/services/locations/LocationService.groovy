@@ -119,5 +119,45 @@ class LocationService {
 
         jsonResult
     }
-    
+
+    def modifyLocation(def locationId, def jsonLocation){
+
+        Map jsonResult      = [:]
+        def responseMessage = ''
+
+        if (!locationId){
+
+            throw new NotFoundException("You must provider locationId")
+
+        }
+
+        def obteinedLocation  = Location.findById(locationId)
+
+        if (!obteinedLocation){
+
+            throw new NotFoundException("The Location with locationId="+locationId+" not found")
+
+        }
+
+        obteinedLocation.name               = jsonLocation?.name
+        obteinedLocation.parentLocationId   = josnLocation?.parent_location_id
+        obteinedLocation.level              = jsonLocation?.level
+
+        if (!obteinedLocation.validate()){
+
+            obteinedLocation.errors.allErrors.each {
+
+                responseMessage += MessageFormat.format(it.defaultMessage, it.arguments) + " "
+            }
+
+            throw  new BadRequestException(responseMessage)
+        }
+
+        obteinedLocation.save()
+
+        jsonResult = getLocation(obteinedLocation.id)
+
+        jsonResult
+
+    }
 }
