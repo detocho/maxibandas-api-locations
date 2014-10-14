@@ -58,4 +58,66 @@ class LocationService {
         jsonResult
 
     }
+
+    def createLocation (def parentLocationId, def jsonLocation){
+
+        Map jsonResult      = [:]
+        def responseMessage = ''
+
+        if(!Location.findById(parentLocationId)){
+
+            throw new NotFoundException("The locationId = "+parentLocationId+" not found")
+        }
+
+        def newLocation =  new Location(
+
+                parentLocationId:parentLocationId,
+                name: jsonLocation?.name,
+                level: jsonLocation?.level
+        )
+
+        if (!newLocation.validate()){
+
+            newLocation.errors.allErrors.each {
+                responseMessage += MessageFormat.format(it.defaultMessage, it.arguments) + " "
+            }
+
+            throw new BadRequestException(responseMessage)
+        }
+
+        newLocation.save()
+
+        jsonResult = getLocation(newLocation.id)
+
+        jsonResult
+    }
+
+    def createLocation (def jsonLocation){
+
+        Map jsonResult      = [:]
+        def responseMessage = ''
+
+        def newLocation = new Location(
+
+                name: jsonLocation?.name,
+                level: jsonLocation?.level
+
+        )
+
+        if (!newLocation.validate()){
+
+            newLocation.errors.allErrors.each {
+                responseMessage += MessageFormat.format(it.defaultMessage, it.arguments) + " "
+            }
+
+            throw new BadRequestException(responseMessage)
+        }
+
+        newLocation.save()
+
+        jsonResult = getLocation(newLocation.id)
+
+        jsonResult
+    }
+    
 }
