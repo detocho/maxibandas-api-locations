@@ -79,6 +79,33 @@ class LocationController {
         }
     }
 
+    def putLocation (){
+
+        def result
+        def locationId = params.locationId
+
+        setHeaders()
+
+        try{
+
+            result = locationService.modifyLocation(locationId, request.JSON)
+            response.setStatus(HttpServletResponse.SC_OK)
+            render result as GSON
+
+        }catch(NotFoundException e){
+
+            renderException(e)
+
+        }catch(BadRequestException e){
+
+            renderException(e)
+
+        }catch(Exception e){
+
+            renderException(e)
+        }
+    }
+
 
     def setHeaders(){
 

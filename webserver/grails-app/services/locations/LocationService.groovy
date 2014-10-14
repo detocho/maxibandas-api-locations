@@ -66,7 +66,7 @@ class LocationService {
 
         if(!Location.findById(parentLocationId)){
 
-            throw new NotFoundException("The locationId = "+parentLocationId+" not found")
+            throw new NotFoundException("The parent location with locationId = "+parentLocationId+" not found")
         }
 
         def newLocation =  new Location(
@@ -87,7 +87,10 @@ class LocationService {
 
         newLocation.save()
 
-        jsonResult = getLocation(newLocation.id)
+        jsonResult.id                   = newLocation.id
+        jsonResult.parent_location_id   = newLocation.parentLocationId
+        jsonResult.name                 = newLocation.name
+        jsonResult.level                = newLocation.level
 
         jsonResult
     }
@@ -115,7 +118,9 @@ class LocationService {
 
         newLocation.save()
 
-        jsonResult = getLocation(newLocation.id)
+        jsonResult.id       = newLocation.id
+        jsonResult.name     = newLocation.name
+        jsonResult.level    = newLocation.level
 
         jsonResult
     }
@@ -140,7 +145,7 @@ class LocationService {
         }
 
         obteinedLocation.name               = jsonLocation?.name
-        obteinedLocation.parentLocationId   = josnLocation?.parent_location_id
+        obteinedLocation.parentLocationId   = jsonLocation?.parent_location_id
         obteinedLocation.level              = jsonLocation?.level
 
         if (!obteinedLocation.validate()){
