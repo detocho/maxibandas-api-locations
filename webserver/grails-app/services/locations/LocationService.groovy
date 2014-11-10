@@ -16,7 +16,7 @@ class LocationService {
 
         Map jsonResult              = [:]
         def jsonChildren            = []
-        Map resultParentLocation    = [:]
+        def resultParentLocation    = []
 
         if (!locationId){
 
@@ -30,7 +30,8 @@ class LocationService {
             throw new NotFoundException("The locationId not Found")
         }
 
-        def childrenLocations = Location.findAllByParentLocationId(locationId)
+        def childrenLocations = Location.findAllByParentLocationId(locationId,
+                [ sort: "name", order: "asc"])
 
         childrenLocations.each{
 
@@ -42,15 +43,7 @@ class LocationService {
             )
         }
 
-        //TODO aqui debemos  obtener toda la info hasta la raiz
-        if (location.parentLocationId){
-
-            def parentLocation = Location.findByLocationId(location.parentLocationId)
-
-            resultParentLocation.location_id    = parentLocation.locationId
-            resultParentLocation.name           = parentLocation.name
-            resultParentLocation.level          = parentLocation.level
-        }
+        resultParentLocation = getParentLocation(location.parentLocationId)
 
         jsonResult.location_id          = location.locationId
         jsonResult.name                 = location.name
@@ -169,5 +162,44 @@ class LocationService {
 
         jsonResult
 
+    }
+
+    def getParentLocation(def parentLocationId){
+
+        def resultParentsLocations = []
+
+        while (parentLocationId){
+            def parent = getParent(parentLocationId)
+
+            resultParentsLocations.add(
+
+                    location_id  : parent.location_id,
+                    name         : parent.name,
+                    level        : parent.level
+
+            )
+            parentLocationId = parent.parent_location_id
+        }
+
+        resultParentsLocations
+
+
+    }
+
+    def getParent(def parentLocationId){
+
+        def jsonParent = [:]
+
+        if (parentLocationId){
+
+            def parentLocation = Location.findByLocationId(parentLocationId)
+
+            jsonParent.location_id          = parentLocation.locationId
+            jsonParent.name                 = parentLocation.name
+            jsonParent.level                = parentLocation.level
+            jsonParent.parent_location_id   = parentLocation.parentLocationId
+        }
+
+        jsonParent
     }
 }
