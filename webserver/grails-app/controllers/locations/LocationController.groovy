@@ -13,19 +13,7 @@ import locations.exceptions.BadRequestException
 class LocationController {
     def locationService
 
-    def notAllowed(){
-        def method = request.method
 
-        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED)
-        setHeaders()
-
-        def mapResult = [
-                message: "Method $method not allowed",
-                status: HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-                error:"not_allowed"
-        ]
-        render mapResult as GSON
-    }
 
     def getLocation(){
 
@@ -104,6 +92,20 @@ class LocationController {
 
             renderException(e)
         }
+    }
+
+    def notAllowed(){
+        def method = request.method
+
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED)
+        setHeaders()
+
+        def mapResult = [
+                message: "Method "+ method +" not allowed",
+                status: HttpServletResponse.SC_METHOD_NOT_ALLOWED,
+                error:"not_allowed"
+        ]
+        render mapResult as GSON
     }
 
 

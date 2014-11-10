@@ -38,7 +38,7 @@ class LocationIntegrationTests {
     @Test
     void test_mustGetLocationWithLocationId(){
 
-        locationController.params.locationId = 1
+        locationController.params.locationId = sampleParentLocation.id
         def response = locationController.getLocation()
         print response
     }

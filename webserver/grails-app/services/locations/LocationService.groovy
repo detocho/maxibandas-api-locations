@@ -23,7 +23,7 @@ class LocationService {
             throw  new NotFoundException("You must provider locationId")
         }
 
-        def location = Location.findById(locationId)
+        def location = Location.findByLocationId(locationId)
 
         if (!location){
 
@@ -36,24 +36,27 @@ class LocationService {
 
             jsonChildren.add(
 
-                    locationId  : it.id,
+                    locationId  : it.locationId,
                     name        : it.name,
                     level       : it.level
             )
         }
 
+        //TODO aqui debemos  obtener toda la info hasta la raiz
         if (location.parentLocationId){
-            def parentLocation = Location.findById(location.parentLocationId)
-            resultParentLocation.id = parentLocation.id
-            resultParentLocation.name = parentLocation.name
-            resultParentLocation.level = parentLocation.level
+
+            def parentLocation = Location.findByLocationId(location.parentLocationId)
+
+            resultParentLocation.location_id    = parentLocation.locationId
+            resultParentLocation.name           = parentLocation.name
+            resultParentLocation.level          = parentLocation.level
         }
 
-        jsonResult.id = location.id
-        jsonResult.name = location.name
-        jsonResult.level = location.level
-        jsonResult.parent_location = resultParentLocation
-        jsonResult.children_locations = jsonChildren
+        jsonResult.location_id          = location.locationId
+        jsonResult.name                 = location.name
+        jsonResult.level                = location.level
+        jsonResult.parent_location      = resultParentLocation
+        jsonResult.children_locations   = jsonChildren
 
         jsonResult
 
@@ -64,16 +67,17 @@ class LocationService {
         Map jsonResult      = [:]
         def responseMessage = ''
 
-        if(!Location.findById(parentLocationId)){
+        if(!Location.findByLocationId(parentLocationId)){
 
-            throw new NotFoundException("The parent location with locationId = "+parentLocationId+" not found")
+            throw new NotFoundException("The parent location with location_id = "+parentLocationId+" not found")
         }
 
         def newLocation =  new Location(
 
-                parentLocationId:parentLocationId,
-                name: jsonLocation?.name,
-                level: jsonLocation?.level
+                locationId          : jsonLocation?.location_id,
+                parentLocationId    : parentLocationId,
+                name                : jsonLocation?.name,
+                level               : jsonLocation?.level
         )
 
         if (!newLocation.validate()){
@@ -87,7 +91,7 @@ class LocationService {
 
         newLocation.save()
 
-        jsonResult.id                   = newLocation.id
+        jsonResult.location_id          = newLocation.locationId
         jsonResult.parent_location_id   = newLocation.parentLocationId
         jsonResult.name                 = newLocation.name
         jsonResult.level                = newLocation.level
@@ -102,8 +106,9 @@ class LocationService {
 
         def newLocation = new Location(
 
-                name: jsonLocation?.name,
-                level: jsonLocation?.level
+                locationId  : jsonLocation?.location_id,
+                name        : jsonLocation?.name,
+                level       : jsonLocation?.level
 
         )
 
@@ -118,9 +123,9 @@ class LocationService {
 
         newLocation.save()
 
-        jsonResult.id       = newLocation.id
-        jsonResult.name     = newLocation.name
-        jsonResult.level    = newLocation.level
+        jsonResult.location_id  = newLocation.locationId
+        jsonResult.name         = newLocation.name
+        jsonResult.level        = newLocation.level
 
         jsonResult
     }
@@ -136,7 +141,7 @@ class LocationService {
 
         }
 
-        def obteinedLocation  = Location.findById(locationId)
+        def obteinedLocation  = Location.findByLocationId(locationId)
 
         if (!obteinedLocation){
 

@@ -13,22 +13,27 @@ class BootStrap {
 
                 def location01 = new Location(
 
-                        name:"México",
-                        level: "country"
+                        locationId  :"MX",
+                        name        :"México",
+                        level       :"country"
                 )
                 location01.save()
 
                 def location02 = new Location(
-                        name:"Aguscalientes",
-                        parentLocationId: location01.id,
-                        level: "state"
+
+                        locationId          : "EST1",
+                        name                : "Aguscalientes",
+                        parentLocationId    : location01.locationId,
+                        level               : "state"
                 )
                 location02.save()
 
                 def location03 = new Location(
-                        name:"Baja California",
-                        parentLocationId: location01.id,
-                        level: "state"
+
+                        locationId          : "EST2",
+                        name                : "Baja California",
+                        parentLocationId    : location01.locationId,
+                        level               : "state"
                 )
                 location03.save()
             }
