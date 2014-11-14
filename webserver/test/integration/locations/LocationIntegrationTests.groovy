@@ -13,15 +13,15 @@ class LocationIntegrationTests {
     void setUp() {
 
         sampleParentLocation = new Location (
-
+                locationId: "MX",
                 name:"México",
                 level: "country"
         ).save()
 
         sampleChildrenLocation = new Location(
-
+                locationId: "EST1",
                 name:"Aguscalientes",
-                parentLocationId: sampleParentLocation.id,
+                parentLocationId: sampleParentLocation.locationId,
                 level: "state"
 
         ).save()
@@ -38,7 +38,7 @@ class LocationIntegrationTests {
     @Test
     void test_mustGetLocationWithLocationId(){
 
-        locationController.params.locationId = sampleParentLocation.id
+        locationController.params.locationId = sampleParentLocation.locationId
         def response = locationController.getLocation()
         print response
     }

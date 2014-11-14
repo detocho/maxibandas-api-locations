@@ -8,6 +8,7 @@ import locations.exceptions.NotFoundException
 import locations.exceptions.ConflictException
 import locations.exceptions.BadRequestException
 
+
 class LocationService {
 
     static transactional = 'mongo'

@@ -19,6 +19,7 @@ class LocationTests {
     void setUp(){
 
         registeredParentLocation = new Location(
+                locationId: "MX",
                 name:"México",
                 level: "country"
         )
@@ -26,8 +27,8 @@ class LocationTests {
         mockForConstraintsTests(Location , [registeredParentLocation])
 
         registeredChildLocation = new Location (
-
-                parentLocationId: registeredParentLocation.id,
+                locationId: "EST1",
+                parentLocationId: registeredParentLocation.locationId,
                 name:"Aguscalientes",
                 level:"state"
         )
@@ -35,7 +36,8 @@ class LocationTests {
         mockForConstraintsTests(Location, [registeredChildLocation])
 
         sampleLocation = new Location(
-                parentLocationId: registeredParentLocation.id,
+                locationId: "EST2",
+                parentLocationId: registeredParentLocation.locationId,
                 name:"Baja California",
                 level: "state"
         )

@@ -11,7 +11,58 @@ import org.junit.*
 @TestFor(Zipcode)
 class ZipcodeTests {
 
-    void testSomething() {
-       fail "Implement me"
+    def registeredZipcode
+    def sampleZipcode
+
+    @Before
+    void setUp(){
+
+        registeredZipcode = new Zipcode(
+                zipcode:"54900",
+                locationId: "NGD1"
+        )
+
+        mockForConstraintsTests(Zipcode, [registeredZipcode])
+
+        sampleZipcode = new Zipcode(
+                zipcode: "54900",
+                locationId: "NGD2"
+        )
     }
+
+    void test_ZipcodeNotValidWithzipcodeIsBlank(){
+
+        sampleZipcode.zipcode=""
+        assertFalse(sampleZipcode.validate())
+        assertEquals("blank", sampleZipcode.errors['zipcode'])
+    }
+
+    void test_ZipcodeNotValidWithZipcodeIsNull(){
+
+        sampleZipcode.zipcode=null
+        assertFalse(sampleZipcode.validate())
+        assertEquals("nullable",sampleZipcode.errors['zipcode'])
+    }
+
+    void test_ZipcodeNotValidWithLocationIdBlank(){
+
+        sampleZipcode.locationId=""
+        assertFalse(sampleZipcode.validate())
+        assertEquals("blank", sampleZipcode.errors['locationId'])
+    }
+
+    void test_ZipcodeNotValidWithLocationIdIsNull(){
+
+        sampleZipcode.locationId=null
+        assertFalse(sampleZipcode.validate())
+        assertEquals("nullable",sampleZipcode.errors['locationId'])
+    }
+
+    void test_ZipcodeNotValidWithLocationIdRepeat(){
+
+        sampleZipcode.locationId='NGD1'
+        assertFalse(sampleZipcode.validate())
+        assertEquals('unique', sampleZipcode.errors['locationId'])
+    }
+
 }
