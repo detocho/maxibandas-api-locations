@@ -1,5 +1,6 @@
 package locations
 
+import locations.utils.Constants
 
 import java.text.MessageFormat
 import org.apache.ivy.plugins.conflict.ConflictManager
@@ -7,6 +8,7 @@ import grails.converters.*
 import locations.exceptions.NotFoundException
 import locations.exceptions.ConflictException
 import locations.exceptions.BadRequestException
+import locations.utils.Constants
 
 
 class LocationService {
@@ -36,11 +38,18 @@ class LocationService {
 
         childrenLocations.each{
 
+            def adjacentLocations = []
+
+            if (it.level == 'state'){
+                adjacentLocations = Constants.ADJACENT_STATES[it.locationId]
+            }
+
             jsonChildren.add(
 
-                    locationId  : it.locationId,
-                    name        : it.name,
-                    level       : it.level
+                    locationId          : it.locationId,
+                    name                : it.name,
+                    level               : it.level,
+                    adjacent_locations  : adjacentLocations
             )
         }
 
@@ -50,7 +59,12 @@ class LocationService {
         jsonResult.name                 = location.name
         jsonResult.level                = location.level
         jsonResult.parent_location      = resultParentLocation
+        jsonResult.adjacent_locations   = []
         jsonResult.children_locations   = jsonChildren
+
+        if (jsonResult.level == 'state') {
+            jsonResult.adjacent_locations = Constants.ADJACENT_STATES[jsonResult.location_id]
+        }
 
         jsonResult
 
@@ -174,9 +188,10 @@ class LocationService {
 
             resultParentsLocations.add(
 
-                    location_id  : parent.location_id,
-                    name         : parent.name,
-                    level        : parent.level
+                    location_id         : parent.location_id,
+                    name                : parent.name,
+                    level               : parent.level,
+                    adjacent_locations  : parent.adjacent_locations
 
             )
             parentLocationId = parent.parent_location_id
@@ -199,6 +214,11 @@ class LocationService {
             jsonParent.name                 = parentLocation.name
             jsonParent.level                = parentLocation.level
             jsonParent.parent_location_id   = parentLocation.parentLocationId
+            jsonParent.adjacent_locations   = []
+
+            if (jsonParent.level == 'state') {
+                jsonParent.adjacent_locations = Constants.ADJACENT_STATES[jsonParent.location_id]
+            }
         }
 
         jsonParent

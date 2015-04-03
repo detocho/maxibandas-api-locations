@@ -8,6 +8,7 @@ import locations.exceptions.ConflictException
 import locations.exceptions.BadRequestException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import locations.utils.Constants
 
 class ZipcodeService {
 
@@ -156,11 +157,13 @@ class ZipcodeService {
 
             resultParentsLocations.add(
 
-                    location_id  : parent.location_id,
-                    name         : parent.name,
-                    level        : parent.level
+                    location_id         : parent.location_id,
+                    name                : parent.name,
+                    level               : parent.level,
+                    adjacent_locations  : parent.adjacent_locations
 
             )
+
             parentLocationId = parent.parent_location_id
         }
 
@@ -181,6 +184,11 @@ class ZipcodeService {
             jsonParent.name                 = parentLocation.name
             jsonParent.level                = parentLocation.level
             jsonParent.parent_location_id   = parentLocation.parentLocationId
+            jsonParent.adjacent_locations   = []
+
+            if (jsonParent.level == 'state') {
+                jsonParent.adjacent_locations = Constants.ADJACENT_STATES[jsonParent.location_id]
+            }
         }
 
         jsonParent
